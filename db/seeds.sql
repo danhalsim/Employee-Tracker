@@ -6,7 +6,7 @@ VALUES
 
 INSERT INTO roles (title, salary, department_id)
 VALUES
-    ("Iron Man", 990, 1),
+    ("Iron Man", 1000, 1),
     ("Captain America", 900, 1),
     ("Director", 950, 2),
     ("Agent", 850, 2),

@@ -132,88 +132,57 @@ function addRole() {
             },
         ])
         .then(answer => {
-            const newRole = {
+            const role = {
                 title: answer.title,
                 salary: answer.salary,
                 department_id: answer.department_id
             };
-            db.query("INSERT INTO roles SET ? ", newRole, (err, res) => {
-                err ? console.error(err) : console.log(`${answer.title} role has been added.`);
+            db.query("INSERT INTO roles SET ? ", role, (err, res) => {
+                if (err) throw err
+                console.log(`${answer.title} role has been added.`)
                 init();
             });
         });
 };
 
-const addEmployee = () => {
-    db.query("SELECT * FROM employees", (err, res) => {
-        if (err) {
-            console.error(err);
+// add employee
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "First name:",
+            name: "first_name"
+        },
+        {
+            type: "input",
+            message: "Last name:",
+            name: "last_name"
+        },
+        {
+            type: "input",
+            message: "Enter a role ID:",
+            name: "roles_id"
+        },
+        {
+            type: "input",
+            message: "Enter a manager ID:",
+            name: "manager_id"
+        }
+    ])
+    .then(answer => {
+        const employee = {
+            first_name: answer.first_name,
+            last_name: answer.last_name,
+            roles_id: answer.roles_id,
+            manager_id: answer.manager_id
         };
-        const employees = res.map(resInfo => resInfo.first_name);
-        db.query("SELECT * FROM roles", (err, res) => {
-            if (err) {
-                console.error(err);
-            };
-            const roles = res.map(resInfo => resInfo.title);
-            inquirer.prompt([
-                {
-                    type: "input",
-                    message: "Provide a first name for the new employee:",
-                    name: "first_name"
-                },
-                {
-                    type: "input",
-                    message: "Provide a last name for the new employee:",
-                    name: "last_name"
-                },
-                {
-                    type: "list",
-                    message: "Select a role for the new employee:",
-                    choices: roles,
-                    name: "title"
-                },
-                {
-                    type: "list",
-                    message: "Select a manager for the new employee:",
-                    choices: employees,
-                    name: "manager"
-                }
-            ])
-            .then((answer => {
-                const roleQuery = `SELECT id
-                                   FROM roles
-                                   WHERE title = ?`;
-                db.query(roleQuery, answer.title, (err, res) => {
-                    if (err) {
-                        console.error(err);
-                    };
-                    [{ id }] = res;
-                    const roles_id = id;
-                    const employeeQuery = `SELECT id
-                                           FROM employees
-                                           WHERE first_name = ?`;
-                    db.query(employeeQuery, answer.manager, (err, res) => {
-                        if (err) {
-                            console.error(err);
-                        };
-                        [{ id }] = res;
-                        const manager_id = id;
-                        const newEmployees = {
-                            first_name: answer.first_name,
-                            last_name: answer.last_name,
-                            roles_id: roles_id,
-                            manager_id: manager_id
-                        };
-                        db.query("INSERT INTO employees SET ? ", newEmployees, (err, res) => {
-                            err ? console.error(err) : console.log(`${answer.first_name} employee has been added.`)
-                            init();
-                        });
-                    });
-                });
-            }));
+        db.query("INSERT INTO employees SET ? ", employee, (err, res) => {
+            if (err) throw err
+            console.log(`${answer.first_name} ${answer.last_name} has been added as an employee.`);
+            init();
         });
-    });
-};
+    })
+}
 
 const updateEmployee = () => {
     db.query("SELECT * FROM employees", (err, res) => {
@@ -254,8 +223,7 @@ const updateEmployee = () => {
 }
 
 const init = () => {
-    inquirer
-    .prompt(startMenu)
+    inquirer.prompt(startMenu)
     .then(function (answers) {
         menuOptions(answers)
     })
