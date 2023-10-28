@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS company_db;
-CREATE DATABASE company_db;
+DROP DATABASE IF EXISTS marvel_db;
+CREATE DATABASE marvel_db;
 
-USE company_db;
+USE marvel_db;
 
 CREATE TABLE departments(
   id INT NOT NULL AUTO_INCREMENT,
