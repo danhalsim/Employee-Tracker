@@ -42,7 +42,7 @@ function menuOptions(answers) {
             updateEmployee();
             break;
         case "Close program":
-            console.log("Closed the program");
+            console.log("Closed the program.");
             process.exit(0);
     }
 };
